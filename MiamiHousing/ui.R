@@ -15,17 +15,56 @@ shinyUI(fluidPage(
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+          # Setting ConditionalPanel setting for Data tab (value = 6)
+          conditionalPanel(condition="input.conditionedPanels == 'Data'",
+            # DATA TAB - Select Number of Rows to include
+            numericInput("rows_NI",label = "Select the number of rows to view",
+                                   value = 13932, min = 0, max = 13932),
+            # DATA TAB - Select Which Variables to include
+            checkboxGroupInput("variables", "Variables to include:",
+                                              c("LATITUDE",
+                                                "LONGITUDE",
+                                                "LND_SQFOOT",
+                                                "TOT_LVG_AREA",
+                                                "SPEC_FEAT_VAL",
+                                                "age",
+                                                "structure_quality",
+                                                "month_sold",
+                                                "CNTR_DIST",
+                                                "SUBCNTR_DI",
+                                                "OCEAN_DIST",
+                                                "WATER_DIST",
+                                                "avno60plus",
+                                                "RAIL_DIST",
+                                                "HWY_DIST"), 
+                                              c("LATITUDE",
+                                                "LONGITUDE",
+                                                "LND_SQFOOT",
+                                                "TOT_LVG_AREA",
+                                                "SPEC_FEAT_VAL",
+                                                "age",
+                                                "structure_quality",
+                                                "month_sold",
+                                                "CNTR_DIST",
+                                                "SUBCNTR_DI",
+                                                "OCEAN_DIST",
+                                                "WATER_DIST",
+                                                "avno60plus",
+                                                "RAIL_DIST",
+                                                "HWY_DIST")
+                           )
+          ),
+          
+        conditionalPanel(condition="input.conditionedPanels == 'About'", 
+                         h2("Welcome!"),
+                         h4("Read this About page and click a tab on your right to get started."))
+          
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-          tabsetPanel(type = "tab",
-                      tabPanel("About",
+          tabsetPanel(type = "tab", id = "conditionedPanels",
+                      tabPanel("About", 
                     tags$div(
                       h3("About this Project"),
                       "The purpose of this project is to allow users to examine and model data from the dataset 'Miami Housing Dataset.",
@@ -75,12 +114,12 @@ shinyUI(fluidPage(
                       ),
                       tags$br(),
                             ),
-                      tabPanel("Exploration"),
+                      #tabPanel("Exploration"),
                               ),
-                      tabPanel("Modeling Info"),
-                      tabPanel("Model Fitting"),
-                      tabPanel("Prediction"),
-                      tabPanel("Data", tableOutput("data")))
+                      #tabPanel("Modeling Info"),
+                      #tabPanel("Model Fitting"),
+                      #tabPanel("Prediction"),
+                      tabPanel("Data", DT::dataTableOutput("data"))),
         )
     )
 ))

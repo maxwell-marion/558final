@@ -6,7 +6,8 @@
 
 library(shiny)
 library(readr)
-miami <- read_csv("miami-housing.csv", 
+library(DT)
+miami <- read_csv("C:/Users/mxmx/Documents/repos/558final/miami-housing.csv", 
                           col_types = cols(avno60plus = col_character(), 
                                            month_sold = col_character(), 
                                            structure_quality = col_character()))
@@ -29,6 +30,14 @@ shinyServer(function(input, output) {
     # Show entire dataset
     # Subset data (rows and columns)
     # Save the data as a file (.csv or other)
-    output$data <- renderDataTable(miami)
+    output$data <- DT::renderDataTable(miami[1:input$rows_NI, c(input$variables), 
+                                             drop = FALSE], 
+                                       extensions = 'Buttons',
+                                       options = list(scrollX = TRUE,
+                                                      scrolly = TRUE,
+                                                      buttons = c('csv'),
+                                                      dom = 'Bfrtip'),
+                                       class = "display"
+                                       )
     
 })
