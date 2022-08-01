@@ -1,10 +1,7 @@
 #
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
+# Max Marion-Spencer
+# ST 558 - Final Project
+# Server file
 #
 
 library(shiny)
@@ -22,5 +19,8 @@ shinyServer(function(input, output) {
         hist(x, breaks = bins, col = 'darkgray', border = 'white')
 
     })
+    
+    # About page text
+    
 
 })
