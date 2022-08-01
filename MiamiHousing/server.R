@@ -5,6 +5,11 @@
 #
 
 library(shiny)
+library(readr)
+miami <- read_csv("miami-housing.csv", 
+                          col_types = cols(avno60plus = col_character(), 
+                                           month_sold = col_character(), 
+                                           structure_quality = col_character()))
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -20,7 +25,10 @@ shinyServer(function(input, output) {
 
     })
     
-    # About page text
+    # Data Tab
+    # Show entire dataset
+    # Subset data (rows and columns)
+    # Save the data as a file (.csv or other)
+    output$data <- renderDataTable(miami)
     
-
 })

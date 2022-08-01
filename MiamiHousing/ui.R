@@ -80,8 +80,7 @@ shinyUI(fluidPage(
                       tabPanel("Modeling Info"),
                       tabPanel("Model Fitting"),
                       tabPanel("Prediction"),
-                      tabPanel("Data"))
-          #plotOutput("distPlot")
+                      tabPanel("Data", tableOutput("data")))
         )
     )
 ))
