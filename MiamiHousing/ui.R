@@ -45,9 +45,11 @@ shinyUI(fluidPage(
                                         value = 13932, min = 0, max = 13932),
                            # Dropdown for Exploration Tab - numerical summary
                            selectInput("exp_num", "Numeric Summary", c('Summary' = "sum",
-                                                                         'Standard Deviation' = "sd"
+                                                                       'Standard Deviation' = "sd",
+                                                                       'Correlations' = "corr"
+                                                                       
                            )),
-                           checkboxGroupInput("variables", "Variables to include for Numeric Summary:",
+                           checkboxGroupInput("exp_variables", "Variables to include for Numeric Summary:",
                                               var_list, 
                                               var_list),
             # Dropdown for Exploration Tab - numerical summary
@@ -64,7 +66,7 @@ shinyUI(fluidPage(
             # Conditional for Barplot selection
             conditionalPanel(
               condition = "input.exp_graph == 'bar'",
-              selectInput("hist_x", "Select a variable", var_list )
+              selectInput("bar_x", "Select a variable", var_list )
             ),
             
             # Conditional for scatterplot selection
@@ -153,7 +155,7 @@ shinyUI(fluidPage(
                       )),
                       tags$br(),
                       ),
-                      tabPanel("Exploration", "test"),
+                      tabPanel("Exploration", verbatimTextOutput("num_sum"), plotOutput("graph_sum")),
                       tabPanel("Model Info"),
                       tabPanel("Model Fitting"),
                       tabPanel("Prediction"),
