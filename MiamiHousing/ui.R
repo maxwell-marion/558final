@@ -6,6 +6,23 @@
 
 library(shiny)
 
+
+var_list <- c("LATITUDE",
+              "LONGITUDE",
+              "LND_SQFOOT",
+              "TOT_LVG_AREA",
+              "SPEC_FEAT_VAL",
+              "age",
+              "structure_quality",
+              "month_sold",
+              "CNTR_DIST",
+              "SUBCNTR_DI",
+              "OCEAN_DIST",
+              "WATER_DIST",
+              "avno60plus",
+              "RAIL_DIST",
+              "HWY_DIST")
+
 # Define UI for application
 shinyUI(fluidPage(
 
@@ -15,50 +32,72 @@ shinyUI(fluidPage(
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-          # Setting ConditionalPanel setting for Data tab (value = 6)
+          # Setting ConditionalPanel setting for About tab
+          conditionalPanel(condition="input.conditionedPanels == 'About'", 
+                           h2("Welcome!"),
+                           h4("Read this About page and click a tab on your right to get started.")),
+          
+          # Setting ConditionalPanel setting for Exploration
+          conditionalPanel(condition="input.conditionedPanels == 'Exploration'",
+                           h4("Use the settings below to adjust your data exploration"),
+                           # Adding row filter
+                           numericInput("expRows_NI",label = "Select the number of rows to use",
+                                        value = 13932, min = 0, max = 13932),
+                           # Dropdown for Exploration Tab - numerical summary
+                           selectInput("exp_num", "Numeric Summary", c('Summary' = "sum",
+                                                                         'Standard Deviation' = "sd"
+                           )),
+                           checkboxGroupInput("variables", "Variables to include for Numeric Summary:",
+                                              var_list, 
+                                              var_list),
+            # Dropdown for Exploration Tab - numerical summary
+            selectInput("exp_graph", "Graphical Summary", c('Histogram' = "hist",
+                                                        'Bar Plot' = "bar",
+                                                        'Correlation Plot' = "corr",
+                                                        'Scatterplot' = "scatter")),
+            # Conditional for Histogram selection
+            conditionalPanel(
+              condition = "input.exp_graph == 'hist'",
+              selectInput("hist_x", "Select a variable", var_list )
+            ),
+            
+            # Conditional for Barplot selection
+            conditionalPanel(
+              condition = "input.exp_graph == 'bar'",
+              selectInput("hist_x", "Select a variable", var_list )
+            ),
+            
+            # Conditional for scatterplot selection
+            conditionalPanel(
+              condition = "input.exp_graph == 'scatter'",
+              selectInput("scatter_x", "Select scatter plot  x variable", var_list ),
+              selectInput("scatter_y", "Select scatter plot y variable", var_list)
+              )),
+                                                        
+          
+          # Setting ConditionalPanel setting for Modeling Info
+          conditionalPanel(condition="input.conditionedPanels == 'Model Info'",
+                           h2("Placeholder")),
+          
+          # Setting ConditionalPanel setting for Model Fitting
+          conditionalPanel(condition="input.conditionedPanels == 'Model Fitting'",
+                           h2("Placeholder")),
+          
+          # Setting ConditionalPanel setting for Prediction
+          conditionalPanel(condition="input.conditionedPanels == 'Prediction'",
+                           h2("Placeholder")),
+          
+          # Setting ConditionalPanel setting for Data tab 
           conditionalPanel(condition="input.conditionedPanels == 'Data'",
             # DATA TAB - Select Number of Rows to include
             numericInput("rows_NI",label = "Select the number of rows to view",
                                    value = 13932, min = 0, max = 13932),
             # DATA TAB - Select Which Variables to include
-            checkboxGroupInput("variables", "Variables to include:",
-                                              c("LATITUDE",
-                                                "LONGITUDE",
-                                                "LND_SQFOOT",
-                                                "TOT_LVG_AREA",
-                                                "SPEC_FEAT_VAL",
-                                                "age",
-                                                "structure_quality",
-                                                "month_sold",
-                                                "CNTR_DIST",
-                                                "SUBCNTR_DI",
-                                                "OCEAN_DIST",
-                                                "WATER_DIST",
-                                                "avno60plus",
-                                                "RAIL_DIST",
-                                                "HWY_DIST"), 
-                                              c("LATITUDE",
-                                                "LONGITUDE",
-                                                "LND_SQFOOT",
-                                                "TOT_LVG_AREA",
-                                                "SPEC_FEAT_VAL",
-                                                "age",
-                                                "structure_quality",
-                                                "month_sold",
-                                                "CNTR_DIST",
-                                                "SUBCNTR_DI",
-                                                "OCEAN_DIST",
-                                                "WATER_DIST",
-                                                "avno60plus",
-                                                "RAIL_DIST",
-                                                "HWY_DIST")
+            checkboxGroupInput("data_variables", "Variables to include:",
+                                              var_list, 
+                                              var_list
                            )
-          ),
-          
-        conditionalPanel(condition="input.conditionedPanels == 'About'", 
-                         h2("Welcome!"),
-                         h4("Read this About page and click a tab on your right to get started."))
-          
+          )
         ),
 
         # Show a plot of the generated distribution
@@ -111,15 +150,14 @@ shinyUI(fluidPage(
                         tags$li(tags$b("avno60plus:"), tags$em("0 or 1, for when airplane noise that exceeds the acceptable level")),
                         tags$li(tags$b("RAIL_DIST:"), tags$em("The distance from the nearest rail line, in feet")),
                         tags$li(tags$b("HWY_DIST:"), tags$em("Distance from the nearest highway, in feet")),
-                      ),
+                      )),
                       tags$br(),
-                            ),
-                      #tabPanel("Exploration"),
-                              ),
-                      #tabPanel("Modeling Info"),
-                      #tabPanel("Model Fitting"),
-                      #tabPanel("Prediction"),
-                      tabPanel("Data", DT::dataTableOutput("data"))),
+                      ),
+                      tabPanel("Exploration", "test"),
+                      tabPanel("Model Info"),
+                      tabPanel("Model Fitting"),
+                      tabPanel("Prediction"),
+                      tabPanel("Data", DT::dataTableOutput("data"))
         )
     )
-))
+)))

@@ -7,6 +7,10 @@
 library(shiny)
 library(readr)
 library(DT)
+
+library(dplyr)
+library(ggplot2)
+
 miami <- read_csv("C:/Users/mxmx/Documents/repos/558final/miami-housing.csv", 
                           col_types = cols(avno60plus = col_character(), 
                                            month_sold = col_character(), 
@@ -15,7 +19,7 @@ miami <- read_csv("C:/Users/mxmx/Documents/repos/558final/miami-housing.csv",
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
-    output$distPlot <- renderPlot({
+    output$exp_hist <- renderPlot({
 
         # generate bins based on input$bins from ui.R
         x    <- faithful[, 2]
@@ -30,7 +34,7 @@ shinyServer(function(input, output) {
     # Show entire dataset
     # Subset data (rows and columns)
     # Save the data as a file (.csv or other)
-    output$data <- DT::renderDataTable(miami[1:input$rows_NI, c(input$variables), 
+    output$data <- DT::renderDataTable(miami[1:input$rows_NI, c(input$data_variables), 
                                              drop = FALSE], 
                                        extensions = 'Buttons',
                                        options = list(scrollX = TRUE,
