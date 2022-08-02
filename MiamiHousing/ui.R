@@ -9,17 +9,19 @@ library(shiny)
 
 var_list <- c("LATITUDE",
               "LONGITUDE",
+              "PARCELNO",
+              "SALE_PRC",
               "LND_SQFOOT",
               "TOT_LVG_AREA",
               "SPEC_FEAT_VAL",
               "age",
               "structure_quality",
+              "avno60plus",
               "month_sold",
               "CNTR_DIST",
               "SUBCNTR_DI",
               "OCEAN_DIST",
               "WATER_DIST",
-              "avno60plus",
               "RAIL_DIST",
               "HWY_DIST")
 
@@ -39,51 +41,75 @@ shinyUI(fluidPage(
           
           # Setting ConditionalPanel setting for Exploration
           conditionalPanel(condition="input.conditionedPanels == 'Exploration'",
-                           h4("Use the settings below to adjust your data exploration"),
-                           # Adding row filter
-                           numericInput("expRows_NI",label = "Select the number of rows to use",
+                           h4("Use the features below to explore the data."),
+                           
+          # Adding row filter
+          numericInput("expRows_NI",label = "Select the number of rows to use (max: 13,932)",
                                         value = 13932, min = 0, max = 13932),
-                           # Dropdown for Exploration Tab - numerical summary
-                           selectInput("exp_num", "Numeric Summary", c('Summary' = "sum",
-                                                                       'Standard Deviation' = "sd",
-                                                                       'Correlations' = "corr"
-                                                                       
-                           )),
-                           checkboxGroupInput("exp_variables", "Variables to include for Numeric Summary:",
-                                              var_list, 
-                                              var_list),
-            # Dropdown for Exploration Tab - numerical summary
-            selectInput("exp_graph", "Graphical Summary", c('Histogram' = "hist",
-                                                        'Bar Plot' = "bar",
+          
+          h4("Graph Options"),
+                           
+          # Dropdown for Exploration Tab - graphical summary
+          selectInput("exp_graph", "Graphical Summary", c('Histogram' = "hist",
                                                         'Correlation Plot' = "corr",
                                                         'Scatterplot' = "scatter")),
-            # Conditional for Histogram selection
-            conditionalPanel(
-              condition = "input.exp_graph == 'hist'",
-              selectInput("hist_x", "Select a variable", var_list )
-            ),
-            
-            # Conditional for Barplot selection
-            conditionalPanel(
-              condition = "input.exp_graph == 'bar'",
-              selectInput("bar_x", "Select a variable", var_list )
-            ),
-            
-            # Conditional for scatterplot selection
-            conditionalPanel(
-              condition = "input.exp_graph == 'scatter'",
-              selectInput("scatter_x", "Select scatter plot  x variable", var_list ),
-              selectInput("scatter_y", "Select scatter plot y variable", var_list)
-              )),
-                                                        
+          
+          # Conditional for Histogram selection
+          conditionalPanel(
+            condition = "input.exp_graph == 'hist'",
+            selectInput("hist_x", "Select a variable", var_list )
+          ),
+          
+          # Conditional for Barplot selection
+          conditionalPanel(
+            condition = "input.exp_graph == 'bar'",
+            selectInput("bar_x", "Select a variable", var_list)
+          ),
+          
+          # Conditional for scatterplot selection
+          conditionalPanel(
+            condition = "input.exp_graph == 'scatter'",
+            selectInput("scatter_x", "Select scatter plot  x variable", var_list ),
+            selectInput("scatter_y", "Select scatter plot y variable", var_list, selected = "LONGITUDE")
+          ),
+          
+          h4("Numeric Options"),
+          
+          # Dropdown for Exploration Tab - numerical summary
+          selectInput("exp_num", "Choose a numeric summary", c('Summary' = "sum",
+                                                      'Standard Deviation' = "sd",
+                                                      'Correlations' = "corr")
+          ),
+          
+          # Checkboxes for numeric data summaries
+          checkboxGroupInput("exp_variables", "Variables to include for numeric summary (and corrplot):",
+                             var_list, 
+                             var_list),
+          ),
+          
           
           # Setting ConditionalPanel setting for Modeling Info
           conditionalPanel(condition="input.conditionedPanels == 'Model Info'",
-                           h2("Placeholder")),
+                           h4("Background about our models.")),
           
           # Setting ConditionalPanel setting for Model Fitting
           conditionalPanel(condition="input.conditionedPanels == 'Model Fitting'",
-                           h2("Placeholder")),
+            h2("Placeholder"),
+            
+            # Slider control Train/Test
+            sliderInput("trainRatio",
+                        "Training Set Data Proportion",
+                        min = 0.0, max = 1, value = 0.7),
+            sliderInput("testRatio",
+                        "Test Set Data Proportion",
+                        min = 0.0, max = 1, value = 1-0.7),
+            # Model Settings: Linear Regression
+            
+            # Model Settings: Boosted Tree        
+            
+            # Model Settings: Random Forest               
+                           
+                           ),
           
           # Setting ConditionalPanel setting for Prediction
           conditionalPanel(condition="input.conditionedPanels == 'Prediction'",
@@ -139,24 +165,39 @@ shinyUI(fluidPage(
                       tags$ul(
                         tags$li(tags$b("LATITUDE:"), tags$em("The latitude of the house")),
                         tags$li(tags$b("LONGITUDE:"), tags$em("The longitude of the house")),
+                        tags$li(tags$b("PARCELNO:"), tags$em("The parcel number of the house, contains ~1% repeat sales")),
+                        tags$li(tags$b("SALE_PRC:"), tags$em("The sale price of the house")),
                         tags$li(tags$b("LND_SQFOOT:"), tags$em("The square footage of the parcel of land involved in the sale")),
                         tags$li(tags$b("TOT_LVG_AREA:"), tags$em("The square footage of the livable area of the house")),
                         tags$li(tags$b("SPEC_FEAT_VAL:"), tags$em("Value of features such as swimming pools")),
                         tags$li(tags$b("age:"), tags$em("The age of the house")),
                         tags$li(tags$b("structure_quality:"), tags$em("Quality of the structure from 1 (worst) to 5 (best)")),
-                        tags$li(tags$b("month:"), tags$em("The month that the house was sold in")),
+                        tags$li(tags$b("month_sold:"), tags$em("The month that the house was sold in")),
+                        tags$li(tags$b("avno60plus:"), tags$em("0 or 1, for when airplane noise that exceeds the acceptable level")),
                         tags$li(tags$b("CNTR_DIST:"), tags$em("The distance from the Miami central business district")),
                         tags$li(tags$b("SUBCNTR_DI:"), tags$em("The distance from the nearest subcenter")),
                         tags$li(tags$b("OCEAN_DIST:"), tags$em("Distance from the ocean")),
                         tags$li(tags$b("WATER_DIST:"), tags$em("Distance from a body of water")),
-                        tags$li(tags$b("avno60plus:"), tags$em("0 or 1, for when airplane noise that exceeds the acceptable level")),
                         tags$li(tags$b("RAIL_DIST:"), tags$em("The distance from the nearest rail line, in feet")),
                         tags$li(tags$b("HWY_DIST:"), tags$em("Distance from the nearest highway, in feet")),
                       )),
                       tags$br(),
                       ),
-                      tabPanel("Exploration", verbatimTextOutput("num_sum"), plotOutput("graph_sum")),
-                      tabPanel("Model Info"),
+                      tabPanel("Exploration", plotOutput("graph_sum"), verbatimTextOutput("num_sum")),
+                      tabPanel("Model Info", 
+                               tags$div(
+                                 h3("Information About Our Three Models"),
+                                 tags$br(),
+                                 h4("Multiple Linear Regression Model:"),
+                                 " ",
+                                 tags$br(),
+                                 h4("Boosted Tree Model:"), 
+                                 " ",
+                                 tags$br(),
+                                 h4("Random Forest Model:"),
+                                 " ",
+                                 
+                               )),
                       tabPanel("Model Fitting"),
                       tabPanel("Prediction"),
                       tabPanel("Data", DT::dataTableOutput("data"))

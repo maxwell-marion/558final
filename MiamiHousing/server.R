@@ -10,13 +10,14 @@ library(DT)
 
 library(dplyr)
 library(ggplot2)
+library(ggcorrplot)
 
 miami <- read_csv("C:/Users/mxmx/Documents/repos/558final/miami-housing.csv")
 
 # Define server logic required to draw a histogram
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
     
-    ### Exploration Tab
+  ### Exploration Tab
     ## Numeric Summaries
     observe(output$num_sum <- renderPrint({
       if(input$exp_num == 'sum'){
@@ -29,38 +30,37 @@ shinyServer(function(input, output) {
         cor(miami[1:input$expRows_NI,c(input$exp_variables), drop = FALSE])
       }
     }))
-  
     ## Graphical Summaries
-    #observe(g <- ggplot(miami[1:input$expRows_NI,input$hist_x]))
     observe(output$graph_sum <- renderPlot({
       if(input$exp_graph == 'hist'){
         # histogram code
-        #g <- ggplot(data = miami[1:input$expRows_NI,c(input$hist_x), 
-                                 #drop = FALSE])
-        #g + geom_histogram(aes(x = input$hist_x))
-      }
-      else if(input$exp_graph == 'bar'){
-        # bar code
-        #g <- ggplot(miami[1:input$expRows_NI,input$bar_x])
-        #g + geom_bar()
+        g <- ggplot(miami[1:input$expRows_NI,c(input$hist_x), 
+                                 drop = FALSE])
+        g + geom_histogram(aes_string(x = input$hist_x))
       }
       else if(input$exp_graph == 'corr'){
         # corr code
-        #g_corr <- round(cor(miami[1:input$expRows_NI,input$hist_x]),2)
-        #g <-
+        g_corr <- round(cor(miami[1:input$expRows_NI,c(input$exp_variables), drop = FALSE]),2)
+        ggcorrplot(g_corr)
       }
       else{
         # scattercode
-        #g <- ggplot(data = miami[1:input$expRows_NI,c(input$scatter_x, input$scatter_y), 
-                                 #drop = FALSE])
-        #g + geom_point(aes(x = input$scatter_x, y = input$scatter_y))
+        g <- ggplot(data = miami[1:input$expRows_NI,c(input$scatter_x, input$scatter_y), 
+                                 drop = FALSE])
+        g + geom_point(aes_string(x = input$scatter_x, y = input$scatter_y))
       }
     }))
-
-    ### Data Tab
-    # Show entire dataset
-    # Subset data (rows and columns)
-    # Save the data as a file (.csv or other)
+  ### Model Fitting Tab  
+    # Test/Train Split watcher
+    # Updates testRato 
+    observeEvent(input$trainRatio,
+                 updateSliderInput(session = session, inputId = "testRatio", value = 1-input$trainRatio))
+    # Updates trainRato 
+    observeEvent(input$testRatio,
+                 updateSliderInput(session = session, inputId = "trainRatio", value = 1-input$testRatio))
+    
+  ### Data Tab
+    # Dataset options
     output$data <- DT::renderDataTable(miami[1:input$rows_NI, c(input$data_variables), 
                                              drop = FALSE], 
                                        extensions = 'Buttons',
