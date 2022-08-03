@@ -6,6 +6,8 @@
 
 library(shiny)
 
+# CODE USED TO RUN APP - 
+# shiny::runGitHub("558final","maxwell-marion", subdir = "/MiamiHousing")
 
 var_list <- c("LATITUDE",
               "LONGITUDE",
@@ -24,6 +26,19 @@ var_list <- c("LATITUDE",
               "WATER_DIST",
               "RAIL_DIST",
               "HWY_DIST")
+
+model_list <- c("TOT_LVG_AREA",
+                "SPEC_FEAT_VAL",
+                "age",
+                "structure_quality",
+                "avno60plus",
+                "month_sold",
+                "CNTR_DIST",
+                "SUBCNTR_DI",
+                "OCEAN_DIST",
+                "WATER_DIST",
+                "RAIL_DIST",
+                "HWY_DIST")
 
 # Define UI for application
 shinyUI(fluidPage(
@@ -115,13 +130,13 @@ shinyUI(fluidPage(
             h4("Multiple Linear Regression:"),
             
             # Variable selection - Response
-            selectInput("mlr_resp", "Choose a response variable", var_list),
+            #selectInput("mlr_resp", "Choose a response variable", var_list),
             
             # Variable selection - Predictors
             checkboxGroupInput("mlr_preds",
                                "Choose response variables",
-                               var_list, 
-                               var_list),
+                               model_list, 
+                               model_list),
             
             tags$br(),
             
@@ -129,13 +144,13 @@ shinyUI(fluidPage(
             h4("Regression Tree:"),
             
             # Variable selection - Response
-            selectInput("rtree_resp", "Choose a response variable", var_list),
+            #selectInput("rtree_resp", "Choose a response variable", var_list),
             
             # Variable selection - Predictors
             checkboxGroupInput("rtree_preds",
                                "Choose response variables",
-                               var_list, 
-                               var_list),
+                               model_list, 
+                               model_list),
             
             tags$br(),
             
@@ -143,13 +158,13 @@ shinyUI(fluidPage(
             h4("Random Forest:"),
             
             # Variable selection - Response
-            selectInput("rf_resp", "Choose a response variable", var_list),
+            #selectInput("rf_resp", "Choose a response variable", var_list),
             
             # Variable selection - Predictors
             checkboxGroupInput("rf_preds",
                                "Choose predictor variables",
-                               var_list, 
-                               var_list),
+                               model_list, 
+                               model_list),
             # Selecting mTry
             sliderInput("rf_mtry",
                         "Select mtry sequence: (e.g 1:X)",

@@ -38,6 +38,19 @@ var_list <- c("LATITUDE",
               "RAIL_DIST",
               "HWY_DIST")
 
+model_list <- c("TOT_LVG_AREA",
+              "SPEC_FEAT_VAL",
+              "age",
+              "structure_quality",
+              "avno60plus",
+              "month_sold",
+              "CNTR_DIST",
+              "SUBCNTR_DI",
+              "OCEAN_DIST",
+              "WATER_DIST",
+              "RAIL_DIST",
+              "HWY_DIST")
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
