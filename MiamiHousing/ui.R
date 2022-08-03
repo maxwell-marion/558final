@@ -31,7 +31,7 @@ shinyUI(fluidPage(
     # Application title
     titlePanel("Miami Housing Dataset Analysis"),
 
-    # Sidebar with a slider input for number of bins
+    # Sidebar 
     sidebarLayout(
         sidebarPanel(
           # Setting ConditionalPanel setting for About tab
@@ -43,49 +43,49 @@ shinyUI(fluidPage(
           conditionalPanel(condition="input.conditionedPanels == 'Exploration'",
                            h4("Use the features below to explore the data."),
                            
-          # Adding row filter
-          numericInput("expRows_NI",label = "Select the number of rows to use (max: 13,932)",
+            # Adding row filter
+            numericInput("expRows_NI",label = "Select the number of rows to use (max: 13,932)",
                                         value = 13932, min = 0, max = 13932),
           
-          h4("Graph Options"),
+            h4("Graph Options"),
                            
-          # Dropdown for Exploration Tab - graphical summary
-          selectInput("exp_graph", "Graphical Summary", c('Histogram' = "hist",
+            # Dropdown for Exploration Tab - graphical summary
+            selectInput("exp_graph", "Graphical Summary", c('Histogram' = "hist",
                                                         'Correlation Plot' = "corr",
                                                         'Scatterplot' = "scatter")),
           
-          # Conditional for Histogram selection
-          conditionalPanel(
-            condition = "input.exp_graph == 'hist'",
-            selectInput("hist_x", "Select a variable", var_list )
-          ),
+            # Conditional for Histogram selection
+            conditionalPanel(
+              condition = "input.exp_graph == 'hist'",
+              selectInput("hist_x", "Select a variable", var_list )
+            ),
           
-          # Conditional for Barplot selection
-          conditionalPanel(
-            condition = "input.exp_graph == 'bar'",
-            selectInput("bar_x", "Select a variable", var_list)
-          ),
+            # Conditional for Barplot selection
+            conditionalPanel(
+              condition = "input.exp_graph == 'bar'",
+              selectInput("bar_x", "Select a variable", var_list)
+            ),
           
-          # Conditional for scatterplot selection
-          conditionalPanel(
-            condition = "input.exp_graph == 'scatter'",
-            selectInput("scatter_x", "Select scatter plot  x variable", var_list ),
-            selectInput("scatter_y", "Select scatter plot y variable", var_list, selected = "LONGITUDE")
-          ),
+            # Conditional for scatterplot selection
+            conditionalPanel(
+              condition = "input.exp_graph == 'scatter'",
+              selectInput("scatter_x", "Select scatter plot  x variable", var_list ),
+              selectInput("scatter_y", "Select scatter plot y variable", var_list, selected = "LONGITUDE")
+            ),
           
-          h4("Numeric Options"),
+            h4("Numeric Options"),
           
-          # Dropdown for Exploration Tab - numerical summary
-          selectInput("exp_num", "Choose a numeric summary", c('Summary' = "sum",
+            # Dropdown for Exploration Tab - numerical summary
+            selectInput("exp_num", "Choose a numeric summary", c('Summary' = "sum",
                                                       'Standard Deviation' = "sd",
                                                       'Correlations' = "corr")
-          ),
+            ),
           
-          # Checkboxes for numeric data summaries
-          checkboxGroupInput("exp_variables", "Variables to include for numeric summary (and corrplot):",
+            # Checkboxes for numeric data summaries
+            checkboxGroupInput("exp_variables", "Variables to include for numeric summary (and corrplot):",
                              var_list, 
                              var_list),
-          ),
+            ),
           
           
           # Setting ConditionalPanel setting for Modeling Info
@@ -94,7 +94,7 @@ shinyUI(fluidPage(
           
           # Setting ConditionalPanel setting for Model Fitting
           conditionalPanel(condition="input.conditionedPanels == 'Model Fitting'",
-            h2("Placeholder"),
+            #h3("Settings"),
             
             # Slider control Train/Test
             sliderInput("trainRatio",
@@ -103,18 +103,83 @@ shinyUI(fluidPage(
             sliderInput("testRatio",
                         "Test Set Data Proportion",
                         min = 0.0, max = 1, value = 1-0.7),
-            # Model Settings: Linear Regression
+            tags$br(),
             
-            # Model Settings: Boosted Tree        
+            # Button for fitting all models
+            actionButton("fitbutton", "Press to fit all models"),
             
-            # Model Settings: Random Forest               
-                           
+            tags$br(),
+            tags$br(),
+            
+            # Model Settings: Multiple Linear Regression
+            h4("Multiple Linear Regression:"),
+            
+            # Variable selection - Response
+            selectInput("mlr_resp", "Choose a response variable", var_list),
+            
+            # Variable selection - Predictors
+            checkboxGroupInput("mlr_preds",
+                               "Choose response variables",
+                               var_list, 
+                               var_list),
+            
+            tags$br(),
+            
+            # Model Settings: Regression Tree        
+            h4("Regression Tree:"),
+            
+            # Variable selection - Response
+            selectInput("rtree_resp", "Choose a response variable", var_list),
+            
+            # Variable selection - Predictors
+            checkboxGroupInput("rtree_preds",
+                               "Choose response variables",
+                               var_list, 
+                               var_list),
+            
+            tags$br(),
+            
+            # Model Settings: Random Forest        
+            h4("Random Forest:"),
+            
+            # Variable selection - Response
+            selectInput("rf_resp", "Choose a response variable", var_list),
+            
+            # Variable selection - Predictors
+            checkboxGroupInput("rf_preds",
+                               "Choose response variables",
+                               var_list, 
+                               var_list),
+            # Selecting mTry
+            sliderInput("rf_mtry",
+                        "Select mtry sequence: (e.g 1:X)",
+                        min = 1, max = 15, value = 5)
+            
+            
                            ),
-          
           # Setting ConditionalPanel setting for Prediction
           conditionalPanel(condition="input.conditionedPanels == 'Prediction'",
-                           h2("Placeholder")),
-          
+                           h2("Prediction"), 
+                           
+            # Dropdown for which model to use for prediction
+              selectInput("pred_choice", "Choose a model to use for prediction: ",
+                          c('Multiple Linear Regression' = "mlr",
+                            'Regression Tree' = 'rt',
+                            'Random Forest' = 'rf')),
+            conditionalPanel(condition = "input.pred_choice == `mlr`",
+                             h2("MLR")),
+            conditionalPanel(condition = "input.pred_choice == `rt`",
+                             h2("RT")),
+            conditionalPanel(condition = "input.pred_choice == `rf`",
+                             h2("RF"))
+                           
+                           ),
+                           
+                           
+                           
+          #),
+
+                           
           # Setting ConditionalPanel setting for Data tab 
           conditionalPanel(condition="input.conditionedPanels == 'Data'",
             # DATA TAB - Select Number of Rows to include
@@ -123,8 +188,7 @@ shinyUI(fluidPage(
             # DATA TAB - Select Which Variables to include
             checkboxGroupInput("data_variables", "Variables to include:",
                                               var_list, 
-                                              var_list
-                           )
+                                              var_list)
           )
         ),
 
@@ -191,7 +255,7 @@ shinyUI(fluidPage(
                                  h4("Multiple Linear Regression Model:"),
                                  " ",
                                  tags$br(),
-                                 h4("Boosted Tree Model:"), 
+                                 h4("Regression Tree:"), 
                                  " ",
                                  tags$br(),
                                  h4("Random Forest Model:"),

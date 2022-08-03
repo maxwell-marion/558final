@@ -14,6 +14,31 @@ library(ggcorrplot)
 
 miami <- read_csv("C:/Users/mxmx/Documents/repos/558final/miami-housing.csv")
 
+miami_model <- read_csv("C:/Users/mxmx/Documents/repos/558final/miami-housing.csv", 
+                 col_types = cols(avno60plus = col_factor(levels = c("0", "1")), 
+                   month_sold = col_factor(levels = c("1","2", "3", "4", "5", "6", "7", "8",
+                                                      "9", "10", "11", "12")),
+                   structure_quality = col_factor(levels = c("1","2", "3", "4", "5"))))
+
+var_list <- c("LATITUDE",
+              "LONGITUDE",
+              "PARCELNO",
+              "SALE_PRC",
+              "LND_SQFOOT",
+              "TOT_LVG_AREA",
+              "SPEC_FEAT_VAL",
+              "age",
+              "structure_quality",
+              "avno60plus",
+              "month_sold",
+              "CNTR_DIST",
+              "SUBCNTR_DI",
+              "OCEAN_DIST",
+              "WATER_DIST",
+              "RAIL_DIST",
+              "HWY_DIST")
+
+
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
     
@@ -58,6 +83,29 @@ shinyServer(function(input, output, session) {
     # Updates trainRato 
     observeEvent(input$testRatio,
                  updateSliderInput(session = session, inputId = "trainRatio", value = 1-input$testRatio))
+    # (MLR) Watches/updates checkboxes for predictor selection to remove the response variable
+    observeEvent(input$mlr_resp,
+                 updateCheckboxInput(session = session, inputId = "mlr_preds", value = var_list[var_list != input$mlr_resp]))
+    # (RTree) Watches/updates checkboxes for predictor selection to remove the response variable
+    observeEvent(input$rtree_resp,
+                 updateCheckboxInput(session = session, inputId = "rtree_preds", value = var_list[var_list != input$rtree_resp]))
+    # (Random Forest) Watches/updates checkboxes for predictor selection to remove the response variable
+    
+    
+    # Watches button and fits all models
+    observeEvent(input$fitbutton, {
+      
+      # MLR Fit
+      
+      
+      # RTree Fit
+      
+      
+      # Random Forest Fit
+      
+      
+    })
+                 
     
   ### Data Tab
     # Dataset options
