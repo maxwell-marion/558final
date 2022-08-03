@@ -176,24 +176,38 @@ shinyUI(fluidPage(
           conditionalPanel(condition="input.conditionedPanels == 'Prediction'",
                            h2("Prediction"), 
                            
-            # Dropdown for which model to use for prediction
-              selectInput("pred_choice", "Choose a model to use for prediction: ",
+              tags$br(),     
+              
+              # Button for creating prediction
+              actionButton("predictionButton", "Press to output prediction"),
+              
+              tags$br(),
+              tags$br(),
+              
+              h4("Choose a model:"),             
+              # Dropdown for which model to use for prediction
+              selectInput("pred_choice", helpText("Choose a fitted model from the previous tab to use for prediction"),
                           c('Multiple Linear Regression' = "mlr",
                             'Regression Tree' = 'rt',
                             'Random Forest' = 'rf')),
-              
+            
               # Enter Variable Values
               h4("Enter variable values:"),
-            
               # Numeric Inputs galore
-              numericInput("LATITUDE_i", label = "Latitude", value = 0),
-              numericInput("LONGITUDE_i", label = "Longitude", value = 0),
-              numericInput("PARCELNO_i", label = "Parcel No.", value = 0),
-              numericInput("SALE_PRC_i", label = "Sale Price", value = 0)
-              
-
-                           
-                           ),
+              numericInput("TOT_LVG_AREA_i", label = "Total Living Area", value = 0, min = 0),
+              numericInput("SPEC_FEAT_VAL_i", label = "Special Feature Value", value = 0, min = 0),
+              numericInput("age_i", label = "Age of House", value = 0, min = 1),
+              numericInput("structure_quality_i", label = "Structure Quality", value = 0, min = 1, max = 5),
+              numericInput("avno60plus_i", label = "Airport Noise Exceeds Limit", value = 0, min = 0, max = 1),
+              numericInput("month_sold_i", label = "Month Sold", value = 0, min = 1, max = 12),
+              numericInput("CNTR_DIST_i", label = "Distance to City Center", value = 0, min = 0),
+              numericInput("SUBCNTR_DI_i", label = "Distance from Sub Center", value = 0, min = 0),
+              numericInput("OCEAN_DIST_i", label = "Distance from Ocean", value = 0, min = 0),
+              numericInput("WATER_DIST_i", label = "Distance from Water", value = 0, min = 0),
+              numericInput("RAIL_DIST_i", label = "Distance from Railway", value = 0, min = 0),
+              numericInput("HWY_DIST_i", label = "Distance from Highway", value = 0, min = 0)
+            
+              ),
                            
                            
                            
