@@ -147,7 +147,7 @@ shinyUI(fluidPage(
             
             # Variable selection - Predictors
             checkboxGroupInput("rf_preds",
-                               "Choose response variables",
+                               "Choose predictor variables",
                                var_list, 
                                var_list),
             # Selecting mTry
@@ -166,12 +166,17 @@ shinyUI(fluidPage(
                           c('Multiple Linear Regression' = "mlr",
                             'Regression Tree' = 'rt',
                             'Random Forest' = 'rf')),
-            conditionalPanel(condition = "input.pred_choice == `mlr`",
-                             h2("MLR")),
-            conditionalPanel(condition = "input.pred_choice == `rt`",
-                             h2("RT")),
-            conditionalPanel(condition = "input.pred_choice == `rf`",
-                             h2("RF"))
+              
+              # Enter Variable Values
+              h4("Enter variable values:"),
+            
+              # Numeric Inputs galore
+              numericInput("LATITUDE_i", label = "Latitude", value = 0),
+              numericInput("LONGITUDE_i", label = "Longitude", value = 0),
+              numericInput("PARCELNO_i", label = "Parcel No.", value = 0),
+              numericInput("SALE_PRC_i", label = "Sale Price", value = 0)
+              
+
                            
                            ),
                            

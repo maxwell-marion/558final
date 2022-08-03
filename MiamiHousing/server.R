@@ -90,7 +90,8 @@ shinyServer(function(input, output, session) {
     observeEvent(input$rtree_resp,
                  updateCheckboxInput(session = session, inputId = "rtree_preds", value = var_list[var_list != input$rtree_resp]))
     # (Random Forest) Watches/updates checkboxes for predictor selection to remove the response variable
-    
+    observeEvent(input$rf_resp,
+                 updateCheckboxInput(session = session, inputId = "rf_preds", value = var_list[var_list != input$rf_resp]))
     
     # Watches button and fits all models
     observeEvent(input$fitbutton, {
