@@ -212,7 +212,7 @@ shinyUI(fluidPage(
               # Dropdown for which model to use for prediction
               selectInput("pred_choice", helpText("Choose a fitted model from the previous tab to use for prediction"),
                           c('Multiple Linear Regression' = "mlr",
-                            'Regression Tree' = 'rt',
+                            'Boosted Tree' = 'bt',
                             'Random Forest' = 'rf')),
             
               # Enter Variable Values
@@ -346,7 +346,7 @@ shinyUI(fluidPage(
                                )),
                       tabPanel("Model Fitting", verbatimTextOutput("mlr_sum"),verbatimTextOutput("bt_sum"), verbatimTextOutput("rf_sum"),
                              tableOutput("compare")),
-                      tabPanel("Prediction"),
+                      tabPanel("Prediction", verbatimTextOutput("prediction")),
                       tabPanel("Data", DT::dataTableOutput("data"))
         )
     )

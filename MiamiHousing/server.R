@@ -195,6 +195,31 @@ shinyServer(function(input, output, session) {
   
   ### Prediction Tab
     # Morphing all of our NI's into a dataframe
+    prediction_data <- reactive(c(input$TOT_LVG_AREA_i, input$SPEC_FEAT_VAL_i, input$age_i, input$structure_quality_i, input$avno60plus_i, input$month_sold_i,
+                         input$CNTR_DIST_i, input$SUBCNTR_DI_i, input$OCEAN_DIST_i, input$WATER_DIST_i, input$RAIL_DIST_i, input$HWY_DIST_i))
+    
+    ###Running out of time, can't recall how to fix the inputs not properly becoming a list
+    #prediction_data <- as.data.frame(t(prediction_data))
+    #colnames(prediction_data) <- c(model_list)
+    
+    # Prediction Button wrapper:
+    
+    observeEvent(input$predictionButton, {
+    
+    # Logic for which model to use
+    output$prediction <- renderPrint(
+      if(input$pred_choice == 'mlr'){
+        predict(fit.mlr, prediction_data)
+      }
+      else if(input$pred_choice == 'bt'){
+        predict(fit.bt, prediction_data)
+      }
+      else{
+        predict(fit.rf, prediction_data)
+      }
+    )
+    })
+
     
   ### Data Tab
     # Dataset options
