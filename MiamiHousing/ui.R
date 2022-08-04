@@ -6,6 +6,7 @@
 
 library(shiny)
 
+
 # CODE USED TO RUN APP - 
 # shiny::runGitHub("558final","maxwell-marion", subdir = "/MiamiHousing")
 
@@ -45,6 +46,9 @@ shinyUI(fluidPage(
 
     # Application title
     titlePanel("Miami Housing Dataset Analysis"),
+    
+    # Bringing in MathJax
+    withMathJax(),
 
     # Sidebar 
     sidebarLayout(
@@ -252,7 +256,7 @@ shinyUI(fluidPage(
                       tabPanel("About", 
                     tags$div(
                       h3("About this Project"),
-                      "The purpose of this project is to allow users to examine and model data from the dataset 'Miami Housing Dataset.",
+                      "The purpose of this project is to allow users to examine and model data from the dataset 'Miami Housing Dataset`, in order to predict the `SALE_PRC variable using a variety of predictors and methods.",
                       tags$br(),
                       h3("Tabs"),
                       "This project contains the following tabs: ",
@@ -304,16 +308,40 @@ shinyUI(fluidPage(
                       tabPanel("Exploration", plotOutput("graph_sum"), verbatimTextOutput("num_sum")),
                       tabPanel("Model Info", 
                                tags$div(
-                                 h3("Information About Our Three Models"),
+                                 #h3("Information About Our Three Models"),
+                                 # Couldn't get MathJax to work
                                  tags$br(),
                                  h4("Multiple Linear Regression Model:"),
-                                 " ",
+                                 "Our first model is a Multiple Linear Regression Model. This model is an extension of ordinary least squares linear regression, where the sum of the squared differences between the observed and fitted values is minimized, but with the use of additional predictors in order to predict a response variable.",
                                  tags$br(),
-                                 h4("Regression Tree:"), 
-                                 " ",
+                                 tags$br(),
+                                 "The formula for Multiple Linear Regression Is: ",
+                                 tags$br(),
+                                 tags$br(),
+                                 tags$b(withMathJax('E(Response) ~ Beta0 + Beta1*predictor1 + Beta2*predictor2 + Beta3*predictor3 + (...)')),
+                                 tags$br(),
+                                 tags$br(),
+                                 h4("Boosted Tree:"),
+                                 "Our second model is a Boosted Tree Model. The boosted tree model is a tree based method where the trees grow in a sequential manner, each subsequent tree is based on the previous tree so it updates the prediction as the tree grows. Boosted tree model slowly trains the trees to ensure there is no overfitting for the training data.",
+                                 tags$br(),
+                                 tags$br(),
+                                 "There are four tuning parameters:",
+                                 tags$br(),
+                                 tags$br(),
+                                 tags$ol(tags$b('-n.trees:'), 'Number of trees, increasing n reduces the error on training set'),
+                                 tags$ol(tags$b('-interaction.depth:'), 'number of splits it has to perform on a tree'),
+                                 tags$ol(tags$b('-shrinkage:'), 'learning rate, reduce the impact of each additional fitted tree '),
+                                 tags$ol(tags$b("-n.minobsinnode:"), "minimum number of observations in trees' terminal nodes"),
                                  tags$br(),
                                  h4("Random Forest Model:"),
-                                 " ",
+                                 "Our final model is a Random Forest Model. This model is another decision tree based method that uses regression meaning it works by branching the tree at points in order to minimize the sum of squared errors. In addition, it also uses both bootstrapping and ensemble learning. This means that the data is repeatedly randomly sampled into groups and that the resulting trees are averaged.",
+                                 tags$br(),
+                                 tags$br(),
+                                 "Our lone tuning parameter is:",
+                                 tags$br(),
+                                 tags$br(),
+                                 tags$b("mtry: The number of variables that are randomly sampled when we determine splits for our tree.")
+                                 
                                  
                                )),
                       tabPanel("Model Fitting", verbatimTextOutput("mlr_sum"),verbatimTextOutput("bt_sum"), verbatimTextOutput("rf_sum"),
