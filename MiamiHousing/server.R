@@ -99,21 +99,15 @@ shinyServer(function(input, output, session) {
                  updateSliderInput(session = session, inputId = "trainRatio", value = 1-input$testRatio))
     
     
-    # Builds Test/Train Split by user-inputted ratio
-    set.seed(1)
-    #train <- 0.7
-
-
     # Watches button and fits all models
     observeEvent(input$fitbutton, {
       
       # Training/Test split
+      set.seed(1)
       train <- sample(1:nrow(miami_model),size=nrow(miami_model)*input$trainRatio)
       test <- setdiff(1:nrow(miami_model),train)
       miamiTrain <- miami_model[train, ]
       miamiTest <- miami_model[test, ]
-      # <- 
-
       
       ### MLR Fit
       
@@ -126,7 +120,11 @@ shinyServer(function(input, output, session) {
                       method = "lm",
                       preProcess = c("center", "scale"),
                       trControl = trainControl(method = "cv", number = 5))
-      #print(summary(fit.mlr))
+    
+      # Outputs summary for MLR Model
+      output$mlr_sum <- renderPrint(
+        summary(fit.mlr)
+      )
       
       ### Boosted Tree Fit
       
@@ -156,6 +154,12 @@ shinyServer(function(input, output, session) {
                                                 n.minobsinnode = input$btree_minobs),
                          verbose = FALSE)
 
+      # Outputs summary for Boosted Tree Model
+      output$bt_sum <- renderPrint(
+        summary(fit.boost)
+      )
+      
+      
       ### Random Forest Fit
       
       # Builds formula based on selected variables
@@ -169,8 +173,26 @@ shinyServer(function(input, output, session) {
                       tuneGrid = data.frame(mtry = input$rf_mtry),
                       data = miamiTrain)
       
+      # Outputs summary for Random Forest Model
+      output$rf_sum <- renderPrint(
+        summary(fit.rf)
+      )
+      
+      # Comparing everything on the test set
+      mlr_testing <- round(postResample(predict(fit.mlr, newdata = miamiTest), obs = miamiTest$SALE_PRC),3)
+      bt_testing <- round(postResample(predict(fit.boost, newdata = miamiTest), obs = miamiTest$SALE_PRC),3)
+      rf_testing <- round(postResample(predict(fit.rf, newdata = miamiTest), obs = miamiTest$SALE_PRC),3)
+      
+      # Building dataframe
+      h4("Comparing Our Models")
+      compare <- data.frame(mlr_testing, bt_testing , rf_testing)
+      colnames(compare) <- c("Multiple Linear Regression","Boosted Tree Model","Random Forest Model")
+      
+      output$compare <- renderTable(
+        print(compare)
+      )
     })
-                 
+  
     
   ### Data Tab
     # Dataset options

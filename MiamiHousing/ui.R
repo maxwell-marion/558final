@@ -316,7 +316,8 @@ shinyUI(fluidPage(
                                  " ",
                                  
                                )),
-                      tabPanel("Model Fitting"),
+                      tabPanel("Model Fitting", verbatimTextOutput("mlr_sum"),verbatimTextOutput("bt_sum"), verbatimTextOutput("rf_sum"),
+                             tableOutput("compare")),
                       tabPanel("Prediction"),
                       tabPanel("Data", DT::dataTableOutput("data"))
         )
