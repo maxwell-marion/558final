@@ -11,7 +11,7 @@ Maxwell Marion-Spencer
 
 # About
 
-The purpose of this project is to allow users to examine and model data from the dataset 'Miami Housing Dataset`, in order to predict the `SALE_PRC variable using a variety of predictors and methods. 
+The purpose of this project Shiny application is to allow users to examine and model data from the dataset 'Miami Housing Dataset`, in order to predict the `SALE_PRC variable using a variety of predictors and methods. 
 
 # Requirements
 
