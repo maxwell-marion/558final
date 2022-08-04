@@ -11,6 +11,7 @@ library(DT)
 library(dplyr)
 library(ggplot2)
 library(ggcorrplot)
+library(caret)
 
 miami <- read_csv("C:/Users/mxmx/Documents/repos/558final/miami-housing.csv")
 
@@ -96,27 +97,77 @@ shinyServer(function(input, output, session) {
     # Updates trainRato 
     observeEvent(input$testRatio,
                  updateSliderInput(session = session, inputId = "trainRatio", value = 1-input$testRatio))
-    # (MLR) Watches/updates checkboxes for predictor selection to remove the response variable
-    observeEvent(input$mlr_resp,
-                 updateCheckboxInput(session = session, inputId = "mlr_preds", value = var_list[var_list != input$mlr_resp]))
-    # (RTree) Watches/updates checkboxes for predictor selection to remove the response variable
-    observeEvent(input$rtree_resp,
-                 updateCheckboxInput(session = session, inputId = "rtree_preds", value = var_list[var_list != input$rtree_resp]))
-    # (Random Forest) Watches/updates checkboxes for predictor selection to remove the response variable
-    observeEvent(input$rf_resp,
-                 updateCheckboxInput(session = session, inputId = "rf_preds", value = var_list[var_list != input$rf_resp]))
     
+    
+    # Builds Test/Train Split by user-inputted ratio
+    set.seed(1)
+    #train <- 0.7
+
+
     # Watches button and fits all models
     observeEvent(input$fitbutton, {
       
-      # MLR Fit
+      # Training/Test split
+      train <- sample(1:nrow(miami_model),size=nrow(miami_model)*input$trainRatio)
+      test <- setdiff(1:nrow(miami_model),train)
+      miamiTrain <- miami_model[train, ]
+      miamiTest <- miami_model[test, ]
+      # <- 
+
       
+      ### MLR Fit
       
-      # RTree Fit
+      # Builds formula based on selected variables
+      mlr_form <- as.formula(paste0('SALE_PRC', "~", paste0(input$mlr_preds, collapse = " + ")))
       
+      # Fits Model w/ CV
+      fit.mlr <- caret::train(mlr_form,
+                      data = miamiTrain,
+                      method = "lm",
+                      preProcess = c("center", "scale"),
+                      trControl = trainControl(method = "cv", number = 5))
+      #print(summary(fit.mlr))
       
-      # Random Forest Fit
+      ### Boosted Tree Fit
       
+      # Builds formula based on selected variables
+      bt_form <- as.formula(paste0('SALE_PRC', "~", paste0(input$btree_preds, collapse = " + ")))
+      
+      # Converts input for nTrees into a better format
+      if(input$btree_num == '1'){
+        bt_num <- c(10,25,50)
+      }
+      else if(input$btree_num == '2'){
+        bt_num <- c(25,50,100)
+      }
+      else{
+        bt_num <- c(50,100,150)
+      }
+      
+      # Fits Model w/ CV
+      fit.boost <- train(bt_form,
+                         data = miamiTrain,
+                         method = "gbm",
+                         preProcess = c("center", "scale"),
+                         trControl = trainControl(method = "cv", number = 5),
+                         tuneGrid = expand.grid(n.trees = bt_num,
+                                                interaction.depth = input$btree_depth, 
+                                                shrinkage = input$btree_shrinkage, 
+                                                n.minobsinnode = input$btree_minobs),
+                         verbose = FALSE)
+
+      ### Random Forest Fit
+      
+      # Builds formula based on selected variables
+      rf_form <- as.formula(paste0('SALE_PRC', "~", paste0(input$rf_preds, collapse = " + ")))
+      
+      # Fits Model w/ CV
+      fit.rf <- train(rf_form,
+                      method = "rf",
+                      preProcess = c("center","scale"),
+                      trControl = trainControl(method = "cv", number = 5),
+                      tuneGrid = data.frame(mtry = input$rf_mtry),
+                      data = miamiTrain)
       
     })
                  

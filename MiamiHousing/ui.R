@@ -140,17 +140,37 @@ shinyUI(fluidPage(
             
             tags$br(),
             
-            # Model Settings: Regression Tree        
-            h4("Regression Tree:"),
+            # Model Settings: Boosted Tree        
+            h4("Boosted Tree:"),
             
             # Variable selection - Response
             #selectInput("rtree_resp", "Choose a response variable", var_list),
             
             # Variable selection - Predictors
-            checkboxGroupInput("rtree_preds",
+            checkboxGroupInput("btree_preds",
                                "Choose response variables",
                                model_list, 
                                model_list),
+            
+            # Selecting nTrees
+            selectInput("btree_num", "Choose # of trees", c('10,25,50' = '1',
+                                                            '25,50,100' = '2',
+                                                            '50,100,150' = '3')),
+            
+            # Selecting interactiondepth
+            sliderInput("btree_depth",
+                        "Select depth sequence: (e.g 1:X)",
+                        min = 1, max = 5, value = 3),
+            
+            # Selecting shrinkage
+            sliderInput("btree_shrinkage",
+                        "Select shrinkage value",
+                        min = 0, max = 0.5, value = 0.1),
+            
+            # Selecting n.minobsinnode
+            sliderInput("btree_minobs",
+                        "Select min. # obs in node: ",
+                        min = 1, max = 15, value = 10),
             
             tags$br(),
             
