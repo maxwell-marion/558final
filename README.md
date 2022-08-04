@@ -29,3 +29,7 @@ List of required packages:
 
 
 # Run Code
+
+'''r
+shiny::runGitHub("558final","maxwell-marion", subdir = "/MiamiHousing")
+'''
