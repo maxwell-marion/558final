@@ -133,9 +133,6 @@ shinyUI(fluidPage(
             # Model Settings: Multiple Linear Regression
             h4("Multiple Linear Regression:"),
             
-            # Variable selection - Response
-            #selectInput("mlr_resp", "Choose a response variable", var_list),
-            
             # Variable selection - Predictors
             checkboxGroupInput("mlr_preds",
                                "Choose response variables",
@@ -147,8 +144,6 @@ shinyUI(fluidPage(
             # Model Settings: Boosted Tree        
             h4("Boosted Tree:"),
             
-            # Variable selection - Response
-            #selectInput("rtree_resp", "Choose a response variable", var_list),
             
             # Variable selection - Predictors
             checkboxGroupInput("btree_preds",
@@ -181,8 +176,6 @@ shinyUI(fluidPage(
             # Model Settings: Random Forest        
             h4("Random Forest:"),
             
-            # Variable selection - Response
-            #selectInput("rf_resp", "Choose a response variable", var_list),
             
             # Variable selection - Predictors
             checkboxGroupInput("rf_preds",
@@ -233,10 +226,6 @@ shinyUI(fluidPage(
             
               ),
                            
-                           
-                           
-          #),
-
                            
           # Setting ConditionalPanel setting for Data tab 
           conditionalPanel(condition="input.conditionedPanels == 'Data'",
