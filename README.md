@@ -6,16 +6,8 @@ Maxwell Marion-Spencer
 -   [About](#about)
 -   [Requirements](#requirements)
 -   [Package Installation](#packages)
-    -   [`pokemon`](#pokemon)
-    -   [`pokemon_df`](#pokemon_df)
-    -   [`habitat`](#habitat)
-    -   [`color`](#color)
-    -   [`egg_group`](#egg_group)
-    -   [`berry`](#berry)
--   [Exploratory Data Analysis](#exploratory-data-analysis)
-    -   [Pokémon Analysis](#pokémon-analysis)
-    -   [Berry Analysis](#berry-analysis)
-    -   [Conclusion](#conclusion)
+-   [Run Code](#runcode)
+
 
 # About
 
@@ -34,3 +26,6 @@ List of required packages:
 -   `caret`
 
 # Packages
+
+
+# Run Code
