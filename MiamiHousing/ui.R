@@ -298,7 +298,7 @@ shinyUI(fluidPage(
                       tabPanel("Model Info", 
                                tags$div(
                                  #h3("Information About Our Three Models"),
-                                 # Couldn't get MathJax to work
+                                 # Couldn't get MathJax to work, Beta wasn't appearing properly 
                                  tags$br(),
                                  h4("Multiple Linear Regression Model:"),
                                  "Our first model is a Multiple Linear Regression Model. This model is an extension of ordinary least squares linear regression, where the sum of the squared differences between the observed and fitted values is minimized, but with the use of additional predictors in order to predict a response variable.",
